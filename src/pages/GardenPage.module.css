@@ -1,0 +1,102 @@
+.page {
+  min-height: calc(100vh - 64px);
+  background: linear-gradient(180deg, #e8f5e0 0%, #c8e8b8 100%);
+  padding: 40px 32px 120px;
+  position: relative;
+  overflow: hidden;
+}
+
+.header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-bottom: 40px;
+  max-width: 1000px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.title {
+  font-family: 'Caveat', cursive;
+  font-size: 48px;
+  color: #3a5c2a;
+  line-height: 1;
+}
+
+.subtitle { color: #5a8a4a; font-size: 15px; margin-top: 4px; }
+
+.plantBtn {
+  padding: 12px 24px;
+  border-radius: 100px;
+  background: white;
+  color: #3a5c2a;
+  font-size: 14px;
+  font-weight: 700;
+  box-shadow: 0 4px 14px rgba(60, 100, 40, 0.15);
+  border: 2px solid #b0d8a0;
+  transition: all 0.2s;
+  display: inline-block;
+  white-space: nowrap;
+}
+
+.plantBtn:hover { background: #f4faf0; transform: translateY(-1px); }
+
+/* Empty state */
+.empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 80px 20px;
+  color: #5a8a4a;
+  font-size: 16px;
+}
+
+.emptyIllustration { font-size: 80px; animation: breathe 3s ease-in-out infinite alternate; }
+
+@keyframes breathe {
+  from { transform: scale(1); }
+  to { transform: scale(1.06); }
+}
+
+/* Garden grid */
+.gardenGrid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px 16px;
+  justify-content: center;
+  max-width: 1000px;
+  margin: 0 auto;
+  align-items: flex-end;
+}
+
+.flowerSpot {
+  position: relative;
+}
+
+/* Grass strip at bottom */
+.grass {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 60px;
+  background: linear-gradient(180deg, transparent, #8aba6a);
+  pointer-events: none;
+}
+
+.grass::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 20px;
+  background: repeating-linear-gradient(
+    90deg,
+    transparent 0px, transparent 12px,
+    #7ab85a 12px, #7ab85a 14px
+  );
+}

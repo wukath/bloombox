@@ -1,0 +1,46 @@
+.nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 32px;
+  height: 64px;
+  background: var(--white);
+  box-shadow: 0 2px 12px rgba(120, 80, 50, 0.07);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.logo {
+  font-family: 'Caveat', cursive;
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--brown);
+  letter-spacing: -0.5px;
+}
+
+.logo::before { content: '🌸 '; }
+
+.links { display: flex; align-items: center; gap: 12px; }
+
+.link {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-light);
+  padding: 8px 14px;
+  border-radius: 100px;
+  transition: all 0.15s;
+}
+
+.link:hover { color: var(--brown); background: var(--cream); }
+.link.active { color: var(--brown); }
+
+.cta {
+  background: linear-gradient(135deg, var(--blush), #f4c7d0);
+  color: var(--brown);
+  font-weight: 700;
+  box-shadow: 0 2px 10px rgba(249, 200, 208, 0.5);
+}
+
+.cta:hover { transform: translateY(-1px); box-shadow: 0 4px 14px rgba(249, 200, 208, 0.6); background: linear-gradient(135deg, var(--blush), #f4c7d0); }
+.ctaActive { background: linear-gradient(135deg, var(--peach), #f4b090); color: white; }

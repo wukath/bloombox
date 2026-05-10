@@ -1,18 +1,16 @@
-# bloombox 🌸
+# React + Vite
 
-A cozy social garden where you draw flowers and plant them in your friends' gardens.
+This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
-## Concept
+Currently, two official plugins are available:
 
-- Each user has a personal **garden page**
-- Draw a custom flower using a canvas tool (pick petal shape, color, stem style)
-- Add a small note tag to your flower
-- **Plant it** in a friend's garden
-- Gardens fill up with unique hand-drawn flowers from friends
-- **Water** a friend's garden to show you care — flowers wilt without tending
+- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
+- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
 
-## Stack
+## React Compiler
 
-- Frontend: React + canvas API for the flower drawing tool
-- Backend: tbd
-- Auth: tbd
+The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+
+## Expanding the ESLint configuration
+
+If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
