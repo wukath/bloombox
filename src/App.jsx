@@ -48,9 +48,9 @@ export default function App() {
   const [myFlowers, setMyFlowers] = useState(SEED_FLOWERS);
 
   const handlePlant = (recipient, flower) => {
-    if (recipient === 'me' || recipient === 'myself') {
-      setMyFlowers(f => [flower, ...f]);
-    }
+    // No accounts yet — all planted flowers go to the local garden.
+    // The `for` field records the intended recipient for display.
+    setMyFlowers(f => [{ ...flower, for: recipient }, ...f]);
   };
 
   return (

@@ -55,7 +55,7 @@ export default function FlowerBuilder({ onPlant }) {
           <ColoringCanvas templateId={templateId} colors={colors} size={160} />
         </div>
         <h2>Your flower is planted! 🌱</h2>
-        <p>It's growing in {recipient || 'their'}'s garden.</p>
+        <p>Saved to your garden for <strong>{recipient}</strong>.</p>
         <div className={styles.doneActions}>
           <button className={styles.btnPrimary} onClick={() => navigate('/garden/me')}>See my garden</button>
           <button

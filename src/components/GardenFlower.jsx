@@ -28,7 +28,9 @@ export default function GardenFlower({ flower, onWater }) {
       )}
 
       <div className={styles.meta}>
-        <span className={styles.from}>from {flower.from}</span>
+        <span className={styles.from}>
+          {flower.for ? `for ${flower.for}` : `from ${flower.from}`}
+        </span>
         <button className={styles.waterBtn} onClick={handleWater} title="Water">
           {watered ? '✨' : '💧'}
         </button>

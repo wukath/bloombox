@@ -96,6 +96,8 @@
   gap: 10px;
 }
 
+.controlsCol .btnPrimary { margin-top: 8px; }
+
 .sectionLabel {
   font-weight: 700;
   font-size: 12px;
@@ -197,7 +199,7 @@
 
 /* Buttons */
 .btnPrimary {
-  align-self: flex-start;
+  width: fit-content;
   padding: 12px 28px;
   border-radius: 100px;
   background: linear-gradient(135deg, var(--peach), #f07a60);
@@ -207,14 +209,13 @@
   box-shadow: 0 4px 14px rgba(240, 122, 96, 0.32);
   transition: all 0.2s;
   font-family: 'Nunito', sans-serif;
-  margin-top: 16px;
 }
 
 .btnPrimary:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 6px 18px rgba(240,122,96,0.42); }
 .btnPrimary:disabled { opacity: 0.5; cursor: not-allowed; }
 
 .btnSecondary {
-  align-self: flex-start;
+  width: fit-content;
   padding: 12px 24px;
   border-radius: 100px;
   background: var(--white);
@@ -263,4 +264,4 @@
 .done h2 { font-size: 28px; font-family: 'Caveat', cursive; color: var(--brown); }
 .done p  { color: var(--text-light); font-size: 16px; }
 
-.doneActions { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; margin-top: 8px; }
+.doneActions { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; align-items: center; margin-top: 8px; }
