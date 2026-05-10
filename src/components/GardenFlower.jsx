@@ -3,7 +3,6 @@ import ColoringCanvas from './ColoringCanvas';
 import styles from './GardenFlower.module.css';
 
 export default function GardenFlower({ flower, onWater }) {
-  const [showNote, setShowNote] = useState(false);
   const [watered, setWatered] = useState(false);
 
   const handleWater = () => {
@@ -14,29 +13,26 @@ export default function GardenFlower({ flower, onWater }) {
 
   return (
     <div className={`${styles.wrapper} ${watered ? styles.watered : ''}`}>
-      <div className={styles.flowerWrap} onClick={() => flower.note && setShowNote(v => !v)}>
+      <div className={styles.flower}>
         <ColoringCanvas
           templateId={flower.templateId || 'daisy'}
           colors={flower.colors || {}}
-          size={110}
+          size={120}
         />
       </div>
 
+      {flower.note && (
+        <div className={styles.tag}>
+          <span className={styles.tagNote}>{flower.note}</span>
+        </div>
+      )}
+
       <div className={styles.meta}>
         <span className={styles.from}>from {flower.from}</span>
-        <button className={styles.waterBtn} onClick={handleWater} title="Water this flower">
+        <button className={styles.waterBtn} onClick={handleWater} title="Water">
           {watered ? '✨' : '💧'}
         </button>
       </div>
-
-      {showNote && flower.note && (
-        <div className={styles.noteTag}>
-          <div className={styles.notePaper}>
-            <p>{flower.note}</p>
-            <span className={styles.noteFrom}>— {flower.from}</span>
-          </div>
-        </div>
-      )}
     </div>
   );
 }

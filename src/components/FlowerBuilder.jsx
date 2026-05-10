@@ -152,7 +152,7 @@ export default function FlowerBuilder({ onPlant }) {
               </span>
             </div>
 
-            <button className={styles.btnPrimary} onClick={() => setStep('note')} style={{ marginTop: 'auto' }}>
+            <button className={styles.btnPrimary} onClick={() => setStep('note')}>
               Next: add a note →
             </button>
           </>
@@ -162,7 +162,7 @@ export default function FlowerBuilder({ onPlant }) {
           <>
             <button className={styles.backBtn} onClick={() => setStep('color')}>← back to coloring</button>
 
-            <div className={styles.sectionLabel} style={{ marginTop: 16 }}>Plant for</div>
+            <div className={styles.sectionLabel}>Plant for</div>
             <input
               className={styles.textInput}
               placeholder="Username or email..."
@@ -170,7 +170,7 @@ export default function FlowerBuilder({ onPlant }) {
               onChange={e => setRecipient(e.target.value)}
             />
 
-            <div className={styles.sectionLabel} style={{ marginTop: 16 }}>Add a note (optional)</div>
+            <div className={styles.sectionLabel}>Add a note (optional)</div>
             <textarea
               className={styles.noteInput}
               placeholder="Write something sweet..."
@@ -185,7 +185,6 @@ export default function FlowerBuilder({ onPlant }) {
               className={styles.btnPrimary}
               onClick={handlePlant}
               disabled={!recipient.trim()}
-              style={{ marginTop: 'auto' }}
             >
               🌱 Plant this flower
             </button>
