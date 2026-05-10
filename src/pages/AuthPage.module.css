@@ -1,0 +1,121 @@
+.page {
+  min-height: calc(100vh - 64px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(160deg, var(--cream) 60%, #f9e8f0 100%);
+  padding: 24px;
+}
+
+.card {
+  background: var(--white);
+  border-radius: 28px;
+  padding: 40px 36px;
+  width: 100%;
+  max-width: 400px;
+  box-shadow: 0 8px 40px rgba(120, 80, 50, 0.1);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+.icon { font-size: 40px; margin-bottom: 2px; }
+
+.title {
+  font-family: 'Caveat', cursive;
+  font-size: 36px;
+  color: var(--brown);
+  line-height: 1;
+}
+
+.sub {
+  font-size: 14px;
+  color: var(--text-light);
+  margin-bottom: 8px;
+  text-align: center;
+}
+
+/* Tabs */
+.tabs {
+  display: flex;
+  background: var(--cream);
+  border-radius: 100px;
+  padding: 4px;
+  gap: 2px;
+  margin-bottom: 8px;
+  width: 100%;
+}
+
+.tab {
+  flex: 1;
+  padding: 8px 16px;
+  border-radius: 100px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-light);
+  background: none;
+  transition: all 0.18s;
+  font-family: 'Nunito', sans-serif;
+}
+
+.tab:hover { color: var(--brown); }
+.tabActive { background: var(--white); color: var(--brown); box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+
+/* Form */
+.form {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.field { display: flex; flex-direction: column; gap: 5px; }
+
+.label {
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-light);
+}
+
+.input {
+  padding: 11px 14px;
+  border-radius: 12px;
+  border: 2px solid #ecddd3;
+  background: var(--cream);
+  font-size: 15px;
+  color: var(--text);
+  transition: border-color 0.15s;
+  font-family: 'Nunito', sans-serif;
+  width: 100%;
+}
+
+.input:focus { border-color: var(--peach); outline: none; background: var(--white); }
+
+.error {
+  font-size: 13px;
+  color: #d05050;
+  background: #fff0f0;
+  border-radius: 8px;
+  padding: 8px 12px;
+  text-align: center;
+}
+
+.submit {
+  margin-top: 4px;
+  padding: 13px;
+  border-radius: 100px;
+  background: linear-gradient(135deg, var(--peach), #f07a60);
+  color: white;
+  font-size: 15px;
+  font-weight: 700;
+  box-shadow: 0 4px 14px rgba(240, 122, 96, 0.32);
+  transition: all 0.2s;
+  font-family: 'Nunito', sans-serif;
+  width: 100%;
+}
+
+.submit:hover:not(:disabled) { transform: translateY(-1px); box-shadow: 0 6px 18px rgba(240,122,96,0.42); }
+.submit:disabled { opacity: 0.6; cursor: not-allowed; }

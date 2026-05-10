@@ -44,3 +44,32 @@
 
 .cta:hover { transform: translateY(-1px); box-shadow: 0 4px 14px rgba(249, 200, 208, 0.6); background: linear-gradient(135deg, var(--blush), #f4c7d0); }
 .ctaActive { background: linear-gradient(135deg, var(--peach), #f4b090); color: white; }
+
+.userMenu {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding-left: 8px;
+  border-left: 1px solid #ecddd3;
+}
+
+.userName {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--brown);
+}
+
+.signOut {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-light);
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: 'Nunito', sans-serif;
+  padding: 4px 8px;
+  border-radius: 6px;
+  transition: color 0.15s;
+}
+
+.signOut:hover { color: var(--brown); }

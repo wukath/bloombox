@@ -2,17 +2,22 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import ColoringCanvas from './ColoringCanvas';
 import { TEMPLATES, PALETTE, ERASER_COLOR } from '../data/flowerTemplates';
+import { supabase } from '../lib/supabase';
+import { useAuth } from '../contexts/AuthContext';
 import styles from './FlowerBuilder.module.css';
 
 const buildDefaultColors = (template) => ({ ...template.defaultColors });
 
-export default function FlowerBuilder({ onPlant }) {
+export default function FlowerBuilder() {
   const [templateId, setTemplateId] = useState('daisy');
   const [colors, setColors] = useState(() => buildDefaultColors(TEMPLATES[0]));
   const [selectedColor, setSelectedColor] = useState(PALETTE[0]);
   const [note, setNote] = useState('');
   const [recipient, setRecipient] = useState('');
   const [step, setStep] = useState('color'); // 'color' | 'note' | 'done'
+  const [error, setError] = useState('');
+  const [saving, setSaving] = useState(false);
+  const { user, profile } = useAuth();
   const navigate = useNavigate();
 
   const template = TEMPLATES.find(t => t.id === templateId);
@@ -35,17 +40,28 @@ export default function FlowerBuilder({ onPlant }) {
 
   const resetColors = () => setColors(buildDefaultColors(template));
 
-  const handlePlant = () => {
-    const flower = {
-      id: Date.now(),
-      templateId,
+  const handlePlant = async () => {
+    setError('');
+    setSaving(true);
+    const { error: err } = await supabase.from('flowers').insert({
+      template_id: templateId,
       colors,
-      note,
-      from: 'you',
-      plantedAt: new Date().toISOString(),
-    };
-    onPlant(recipient, flower);
+      note: note.trim(),
+      from_user_id: user.id,
+      from_name: profile?.display_name || user.email.split('@')[0],
+      to_email: recipient.trim().toLowerCase(),
+    });
+    setSaving(false);
+    if (err) { setError(err.message); return; }
     setStep('done');
+  };
+
+  const reset = () => {
+    setStep('color');
+    setColors(buildDefaultColors(template));
+    setNote('');
+    setRecipient('');
+    setError('');
   };
 
   if (step === 'done') {
@@ -55,15 +71,10 @@ export default function FlowerBuilder({ onPlant }) {
           <ColoringCanvas templateId={templateId} colors={colors} size={160} />
         </div>
         <h2>Your flower is planted! 🌱</h2>
-        <p>Saved to your garden for <strong>{recipient}</strong>.</p>
+        <p>It'll bloom in <strong>{recipient}</strong>'s garden.</p>
         <div className={styles.doneActions}>
-          <button className={styles.btnPrimary} onClick={() => navigate('/garden/me')}>See my garden</button>
-          <button
-            className={styles.btnSecondary}
-            onClick={() => { setStep('color'); setColors(buildDefaultColors(template)); setNote(''); setRecipient(''); }}
-          >
-            Make another
-          </button>
+          <button className={styles.btnPrimary} onClick={() => navigate('/garden')}>See my garden</button>
+          <button className={styles.btnSecondary} onClick={reset}>Make another</button>
         </div>
       </div>
     );
@@ -80,11 +91,7 @@ export default function FlowerBuilder({ onPlant }) {
               className={`${styles.templateBtn} ${templateId === t.id ? styles.active : ''}`}
               onClick={() => handleTemplateChange(t.id)}
             >
-              <ColoringCanvas
-                templateId={t.id}
-                colors={t.defaultColors}
-                size={52}
-              />
+              <ColoringCanvas templateId={t.id} colors={t.defaultColors} size={52} />
               <span>{t.name}</span>
             </button>
           ))}
@@ -110,9 +117,7 @@ export default function FlowerBuilder({ onPlant }) {
             <button className={styles.actionBtn} onClick={fillAllPetals} disabled={!selectedColor}>
               fill all petals
             </button>
-            <button className={styles.actionBtn} onClick={resetColors}>
-              reset
-            </button>
+            <button className={styles.actionBtn} onClick={resetColors}>reset</button>
           </div>
         )}
       </div>
@@ -132,7 +137,6 @@ export default function FlowerBuilder({ onPlant }) {
                   aria-label={c}
                 />
               ))}
-              {/* eraser */}
               <button
                 className={`${styles.swatch} ${styles.eraser} ${selectedColor === ERASER_COLOR ? styles.swatchActive : ''}`}
                 onClick={() => setSelectedColor(ERASER_COLOR)}
@@ -143,10 +147,7 @@ export default function FlowerBuilder({ onPlant }) {
             </div>
 
             <div className={styles.selectedPreview}>
-              <span
-                className={styles.selectedSwatch}
-                style={{ background: selectedColor || 'transparent' }}
-              />
+              <span className={styles.selectedSwatch} style={{ background: selectedColor || 'transparent' }} />
               <span className={styles.selectedLabel}>
                 {selectedColor === ERASER_COLOR ? 'Eraser' : 'Selected color'}
               </span>
@@ -165,10 +166,12 @@ export default function FlowerBuilder({ onPlant }) {
             <div className={styles.sectionLabel}>Plant for</div>
             <input
               className={styles.textInput}
-              placeholder="Username or email..."
+              type="email"
+              placeholder="friend@example.com"
               value={recipient}
               onChange={e => setRecipient(e.target.value)}
             />
+            <p className={styles.fieldHint}>They'll see it when they sign in with this email.</p>
 
             <div className={styles.sectionLabel}>Add a note (optional)</div>
             <textarea
@@ -181,12 +184,14 @@ export default function FlowerBuilder({ onPlant }) {
             />
             <div className={styles.charCount}>{note.length}/120</div>
 
+            {error && <p className={styles.fieldError}>{error}</p>}
+
             <button
               className={styles.btnPrimary}
               onClick={handlePlant}
-              disabled={!recipient.trim()}
+              disabled={!recipient.trim() || saving}
             >
-              🌱 Plant this flower
+              {saving ? 'planting...' : '🌱 Plant this flower'}
             </button>
           </>
         )}

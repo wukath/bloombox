@@ -1,66 +1,47 @@
-import { useState } from 'react';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { Navigate, BrowserRouter, Routes, Route } from 'react-router-dom';
+import { AuthProvider, useAuth } from './contexts/AuthContext';
 import Navbar from './components/Navbar';
 import HomePage from './pages/HomePage';
 import BuilderPage from './pages/BuilderPage';
 import GardenPage from './pages/GardenPage';
+import AuthPage from './pages/AuthPage';
 
-const SEED_FLOWERS = [
-  {
-    id: 1,
-    from: 'maya',
-    note: 'just thinking of you 🌷',
-    plantedAt: '2024-03-01',
-    templateId: 'bloom',
-    colors: {
-      petal_0: '#ffb3c6', petal_1: '#ff8fab', petal_2: '#ffb3c6',
-      petal_3: '#ff8fab', petal_4: '#ffb3c6',
-      center: '#ffd166', stem: '#5a9a5a', leaf_0: '#8fce8f', leaf_1: '#5a9a5a',
-    },
-  },
-  {
-    id: 2,
-    from: 'tom',
-    note: 'thanks for everything!!',
-    plantedAt: '2024-03-03',
-    templateId: 'daisy',
-    colors: {
-      petal_0: '#a8c8f0', petal_1: '#74b9e8', petal_2: '#a8c8f0',
-      petal_3: '#74b9e8', petal_4: '#a8c8f0', petal_5: '#74b9e8', petal_6: '#a8c8f0',
-      center: '#f9e07a', stem: '#7ab87a', leaf_0: '#b8e0a0',
-    },
-  },
-  {
-    id: 3,
-    from: 'jess',
-    note: '',
-    plantedAt: '2024-03-05',
-    templateId: 'star',
-    colors: {
-      petal_0: '#d4a5f5', petal_1: '#c9b8e8', petal_2: '#d4a5f5', petal_3: '#c9b8e8',
-      petal_4: '#d4a5f5', petal_5: '#c9b8e8', petal_6: '#d4a5f5', petal_7: '#c9b8e8',
-      center: '#ffd166', stem: '#7ab87a', leaf_0: '#8fce8f', leaf_1: '#7ab87a',
-    },
-  },
-];
+function ProtectedRoute({ children }) {
+  const { user, loading } = useAuth();
+  if (loading) return <div style={{ padding: 60, textAlign: 'center', color: '#9e7f6a', fontFamily: 'Caveat, cursive', fontSize: 24 }}>🌱 loading...</div>;
+  if (!user) return <Navigate to="/auth" replace />;
+  return children;
+}
 
-export default function App() {
-  const [myFlowers, setMyFlowers] = useState(SEED_FLOWERS);
+function AuthRoute({ children }) {
+  const { user, loading } = useAuth();
+  if (loading) return null;
+  if (user) return <Navigate to="/garden" replace />;
+  return children;
+}
 
-  const handlePlant = (recipient, flower) => {
-    // No accounts yet — all planted flowers go to the local garden.
-    // The `for` field records the intended recipient for display.
-    setMyFlowers(f => [{ ...flower, for: recipient }, ...f]);
-  };
-
+function AppRoutes() {
   return (
-    <BrowserRouter>
+    <>
       <Navbar />
       <Routes>
         <Route path="/" element={<HomePage />} />
-        <Route path="/build" element={<BuilderPage onPlant={handlePlant} />} />
-        <Route path="/garden/me" element={<GardenPage flowers={myFlowers} onWater={(id) => console.log('watered', id)} />} />
+        <Route path="/auth" element={<AuthRoute><AuthPage /></AuthRoute>} />
+        <Route path="/build" element={<ProtectedRoute><BuilderPage /></ProtectedRoute>} />
+        <Route path="/garden" element={<ProtectedRoute><GardenPage /></ProtectedRoute>} />
+        {/* legacy redirect */}
+        <Route path="/garden/me" element={<Navigate to="/garden" replace />} />
       </Routes>
+    </>
+  );
+}
+
+export default function App() {
+  return (
+    <BrowserRouter>
+      <AuthProvider>
+        <AppRoutes />
+      </AuthProvider>
     </BrowserRouter>
   );
 }
