@@ -1,0 +1,12 @@
+.region {
+  transition: filter 0.1s, opacity 0.1s;
+}
+
+.region.paintMode:hover {
+  filter: brightness(1.08);
+  opacity: 0.88;
+}
+
+.region.hovered {
+  filter: brightness(1.1);
+}

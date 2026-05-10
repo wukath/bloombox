@@ -1,4 +1,10 @@
-import { PETAL_SHAPES, STEM_STYLES } from '../data/flowerParts';
+import { PETAL_SHAPES } from '../data/flowerParts';
+
+// All coordinates are in a fixed 100×100 viewBox.
+// Flower head center: (50, 32). Stem runs from (50, 42) → (50, 95).
+const CX = 50;
+const CY = 32;
+const PETAL_OFFSET = 16; // distance from flower center to petal center
 
 export default function FlowerSVG({ config, size = 200, animate = false }) {
   const {
@@ -12,70 +18,64 @@ export default function FlowerSVG({ config, size = 200, animate = false }) {
   } = config;
 
   const shape = PETAL_SHAPES.find(p => p.id === petalShape) || PETAL_SHAPES[0];
-  const cx = size / 2;
-  const cy = size / 2 - 20;
-  const petalOffset = 28;
   const angles = Array.from({ length: petalCount }, (_, i) => (360 / petalCount) * i);
 
   const stemPath = (() => {
-    const bx = cx, by = cy + 18;
-    const ex = cx, ey = size - 10;
-    if (stemStyle === 'curved') return `M${bx},${by} Q${bx + 18},${(by + ey) / 2} ${ex},${ey}`;
-    if (stemStyle === 'wiggly') return `M${bx},${by} C${bx - 14},${by + 30} ${bx + 14},${by + 60} ${bx},${by + 90}`;
-    return `M${bx},${by} L${ex},${ey}`;
+    if (stemStyle === 'curved')  return `M${CX},42 Q${CX + 10},65 ${CX},95`;
+    if (stemStyle === 'wiggly')  return `M${CX},42 C${CX - 8},55 ${CX + 8},68 ${CX},81 C${CX - 8},88 ${CX + 4},92 ${CX},95`;
+    return `M${CX},42 L${CX},95`;
   })();
 
+  const leafMidY = 68;
   const leaves = (() => {
     if (leafStyle === 'none') return null;
-    const midY = cy + (size - 10 - cy) / 2;
-    const leaf = `M${cx},${midY} Q${cx + 22},${midY - 18} ${cx + 10},${midY + 16} Q${cx},${midY + 8} ${cx},${midY}Z`;
+    const r = `M${CX},${leafMidY} Q${CX + 12},${leafMidY - 10} ${CX + 6},${leafMidY + 9} Q${CX},${leafMidY + 4} ${CX},${leafMidY}Z`;
     if (leafStyle === 'pair') {
-      const leaf2 = `M${cx},${midY - 14} Q${cx - 22},${midY - 32} ${cx - 10},${midY + 2} Q${cx},${midY - 6} ${cx},${midY - 14}Z`;
-      return <><path d={leaf} fill={stemColor} opacity="0.9" /><path d={leaf2} fill={stemColor} opacity="0.9" /></>;
+      const l = `M${CX},${leafMidY - 8} Q${CX - 12},${leafMidY - 18} ${CX - 6},${leafMidY + 1} Q${CX},${leafMidY - 4} ${CX},${leafMidY - 8}Z`;
+      return <><path d={r} fill={stemColor} opacity="0.9" /><path d={l} fill={stemColor} opacity="0.9" /></>;
     }
-    return <path d={leaf} fill={stemColor} opacity="0.9" />;
+    return <path d={r} fill={stemColor} opacity="0.9" />;
   })();
 
   return (
     <svg
       width={size}
       height={size}
-      viewBox={`0 0 ${size} ${size}`}
+      viewBox="0 0 100 100"
       xmlns="http://www.w3.org/2000/svg"
       style={{ display: 'block' }}
     >
-      {/* stem */}
-      <path d={stemPath} stroke={stemColor} strokeWidth="4" fill="none" strokeLinecap="round" />
+      <path d={stemPath} stroke={stemColor} strokeWidth="2.5" fill="none" strokeLinecap="round" />
       {leaves}
 
-      {/* petals */}
-      <g>
-        {angles.map((angle, i) => {
-          const rad = (angle * Math.PI) / 180;
-          const tx = cx + Math.sin(rad) * petalOffset;
-          const ty = cy - Math.cos(rad) * petalOffset;
-          return (
-            <path
-              key={i}
-              d={shape.path}
-              fill={petalColor}
-              opacity="0.92"
-              transform={`translate(${tx},${ty}) rotate(${angle})`}
-              style={animate ? { transformOrigin: `${tx}px ${ty}px`, animation: `petalWiggle 3s ease-in-out ${i * 0.15}s infinite alternate` } : {}}
-            />
-          );
-        })}
-      </g>
+      {/* Petals: each petal path is centered at (0,0), translated to (CX, CY-PETAL_OFFSET),
+          then the whole group is rotated around the flower center (CX, CY). */}
+      {angles.map((angle, i) => (
+        <g key={i} transform={`rotate(${angle}, ${CX}, ${CY})`}>
+          <path
+            d={shape.path}
+            fill={petalColor}
+            stroke={petalColor}
+            strokeWidth="0.5"
+            opacity="0.95"
+            transform={`translate(${CX}, ${CY - PETAL_OFFSET})`}
+            style={animate ? {
+              transformBox: 'fill-box',
+              transformOrigin: 'center',
+              animation: `petalPulse 3s ease-in-out ${i * 0.2}s infinite alternate`,
+            } : {}}
+          />
+        </g>
+      ))}
 
-      {/* center */}
-      <circle cx={cx} cy={cy} r={12} fill={centerColor} />
-      <circle cx={cx} cy={cy} r={6} fill={centerColor} opacity="0.6" />
+      <circle cx={CX} cy={CY} r={7} fill={centerColor} />
+      <circle cx={CX} cy={CY} r={3.5} fill={centerColor} opacity="0.5" />
 
       {animate && (
         <style>{`
-          @keyframes petalWiggle {
-            from { transform: rotate(0deg) scale(1); }
-            to { transform: rotate(4deg) scale(1.04); }
+          @keyframes petalPulse {
+            from { transform: scale(1); }
+            to   { transform: scale(1.08); }
           }
         `}</style>
       )}

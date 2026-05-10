@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import FlowerSVG from './FlowerSVG';
+import ColoringCanvas from './ColoringCanvas';
 import styles from './GardenFlower.module.css';
 
 export default function GardenFlower({ flower, onWater }) {
@@ -9,13 +9,17 @@ export default function GardenFlower({ flower, onWater }) {
   const handleWater = () => {
     setWatered(true);
     onWater?.(flower.id);
-    setTimeout(() => setWatered(false), 2000);
+    setTimeout(() => setWatered(false), 1800);
   };
 
   return (
     <div className={`${styles.wrapper} ${watered ? styles.watered : ''}`}>
-      <div className={styles.flowerWrap} onClick={() => setShowNote(v => !v)}>
-        <FlowerSVG config={flower.config} size={120} animate />
+      <div className={styles.flowerWrap} onClick={() => flower.note && setShowNote(v => !v)}>
+        <ColoringCanvas
+          templateId={flower.templateId || 'daisy'}
+          colors={flower.colors || {}}
+          size={110}
+        />
       </div>
 
       <div className={styles.meta}>
